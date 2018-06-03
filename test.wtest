@@ -1,0 +1,75 @@
+import personas.*
+import enfermedades.*
+
+describe 'test de enfermedades'{
+const logan = new Persona(20000,36)
+const malaria = new EnfermedadInfecciosa(5000)
+const lupus = new EnfermedadAutoinmune(10000)
+
+method loganViveUnDia (){
+	logan.contraerEnfermedad(malaria)
+	logan.viviUnDia()
+}
+
+method loganViveDosDias(){
+	logan.contraerEnfermedad(malaria)
+	logan.viviUnDia()
+	logan.contraerEnfermedad(lupus)
+	logan.viviUnDia()
+	malaria.atenuarEnfermedad(1000)
+	lupus.atenuarEnfermedad(500)
+}
+
+test "logan tiene valores saludables" {
+
+	assert.that(logan.estasSaludable())
+
+}
+
+test " malaria se reproduce"{
+	assert.equals(5000,malaria.celulaAmenazadas())
+	assert.equals(10000,malaria.reproducirse())
+	
+}
+
+test "logan contrae malaria "{
+	logan.contraerEnfermedad(malaria)
+	assert.equals([malaria],logan.listaEnfermedades())
+}
+
+test "logan vive un dia de su vida"{
+	logan.contraerEnfermedad(malaria)
+	assert.equals(36,logan.temperatura())
+	logan.viviUnDia()
+	assert.equals(41,logan.temperatura())
+	
+}
+
+test "logan contrae lupus"{
+	logan.contraerEnfermedad(lupus)
+	assert.equals([lupus],logan.listaEnfermedades())
+}
+
+test" logan vivir otro dia"{
+	self.loganViveUnDia()
+	logan.contraerEnfermedad(lupus)
+	logan.viviUnDia()
+	assert.equals(46,logan.temperatura())
+	assert.equals(10000,logan.celulas())
+}
+
+test " atenuar malaria en 1000 y el lupus en 500"{
+	malaria.atenuarEnfermedad(1000)
+	lupus.atenuarEnfermedad(500)
+	assert.equals(4000,malaria.celulaAmenazadas())
+	assert.equals(9500,lupus.celulaAmenazadas())
+}
+
+test" logan vive otro dia"{
+	self.loganViveDosDias()
+	logan.viviUnDia()
+	assert.equals(50,logan.temperatura())
+	assert.equals(500,logan.celulas())
+}
+
+}

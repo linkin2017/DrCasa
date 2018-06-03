@@ -1,0 +1,66 @@
+import personas.*
+import medicos.*
+import enfermedades.*
+
+describe 'testeamos que los medicos mediquen bien' {
+
+	//const foreman = new Subordinado(400)
+	const cameron = new Subordinado(20000,36,300)
+	const logan = new Persona(20000, 36)
+	const house = new MedicoJefe(20000,36,cameron)
+	const malaria = new EnfermedadInfecciosa(5000)
+	const lupus = new EnfermedadAutoinmune(10000)
+
+	method loganViveDosDias() {
+		logan.contraerEnfermedad(malaria)
+		logan.viviUnDia()
+		logan.contraerEnfermedad(lupus)
+		logan.viviUnDia()
+		malaria.atenuarEnfermedad(1000)
+		lupus.atenuarEnfermedad(500)
+	}
+	
+	test "Hacer que Cameron atienda a Logan" {
+		self.loganViveDosDias()
+		assert.equals(4000,malaria.celulaAmenazadas())
+		assert.equals(9500,lupus.celulaAmenazadas())
+		cameron.atender(logan)
+		assert.equals(0,malaria.celulaAmenazadas())
+		assert.equals(5000,lupus.celulaAmenazadas())
+		
+	}
+	test "ver si se curo de malaria"{
+		self.loganViveDosDias()
+		cameron.atender(logan)
+		assert.equals(0,malaria.celulaAmenazadas())
+		assert.equals(5000,lupus.celulaAmenazadas())
+		assert.notEquals([malaria],logan.listaEnfermedades())
+	}
+	
+	test "House atiende a Cameron"{
+		cameron.contraerEnfermedad(malaria)
+		cameron.viviUnDia()
+		assert.equals(5000,malaria.celulaAmenazadas())
+		assert.equals(41,cameron.temperatura())
+		house.atender(cameron)
+		assert.equals(500,malaria.celulaAmenazadas())
+		house.atender(cameron)
+		assert.notEquals([malaria],cameron.listaEnfermedades())
+		
+	}
+	
+	test"Hacer que House contraiga la Muerte "{
+		house.contraerEnfermedad(laMuerte)
+		house.contraerEnfermedad(lupus)
+		assert.equals(36,house.temperatura())
+		assert.equals(20000,house.celulas())
+		cameron.atender(house)
+		house.viviUnDia()
+		assert.equals(0,house.temperatura()) 
+		assert.equals(14500,house.celulas()) 
+		
+		
+	}
+
+}
+
